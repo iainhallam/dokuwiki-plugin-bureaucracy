@@ -349,7 +349,7 @@ class helper_plugin_bureaucracy_actiontemplate extends helper_plugin_bureaucracy
         } elseif (preg_match('/^redirect>.+/', $thanks)) {
             // redirect>PAGE PATH
             return '<meta http-equiv="refresh" content="0; URL=' . substr($thanks, 9) . '" />';
-        } elseif (preg_match('', $thanks)) {
+        } elseif (preg_match('/^wiki>.+/', $thanks)) {
             // wiki>WIKI MARKUP
             $html = p_render('xhtml', p_get_instructions($thanks), $info);
         } else {
