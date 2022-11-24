@@ -329,11 +329,33 @@ class helper_plugin_bureaucracy_actiontemplate extends helper_plugin_bureaucracy
         global $ID;
         $backupID = $ID;
 
-        $html = "<p>$thanks</p>";
-
         // Build result tree
         $pages = array_keys($this->targetpages);
         usort($pages, array($this, '_sorttargetpages'));
+
+        // Additional syntaxes for $thanks
+        if ($thanks == 'redirect>addpage') {
+            // redirect>addpage
+            return '<meta http-equiv="refresh" content="0; URL=' . wl($pages[0]) . '" />';
+        } elseif ($thanks == 'redirect>addpage-edit') {
+            // redirect>addpage-edit
+            return '<meta http-equiv="refresh" content="0; URL=' . wl($pages[0], 'do=edit') . '" />';
+        } elseif ($thanks == 'redirect>currentpage') {
+            // redirect>currentpage
+            return '<meta http-equiv="refresh" content="0; URL=' . wl($ID) . '" />';
+        } elseif (preg_match('/^redirect>(?:[a-z]+:)?\/\/.+/', $thanks)) {
+            // redirect>URL
+            return '<meta http-equiv="refresh" content="0; URL=' . substr($thanks, 9) . '" />';
+        } elseif (preg_match('/^redirect>.+/', $thanks)) {
+            // redirect>PAGE PATH
+            return '<meta http-equiv="refresh" content="0; URL=' . substr($thanks, 9) . '" />';
+        } elseif (preg_match('', $thanks)) {
+            // wiki>WIKI MARKUP
+            $html = p_render('xhtml', p_get_instructions($thanks), $info);
+        } else {
+            // plain text
+            $html = "<p>$thanks</p>";
+        }
 
         $data = array();
         $last_folder = array();
